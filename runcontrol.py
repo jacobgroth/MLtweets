@@ -1,8 +1,9 @@
 controlparameters = {
     'pathToGetOldTweetsModule': '/Users/rgjg/Dropbox/nørdekode/andreas/GetOldTweets-python',
-    'username': 'barackobama',
-    'startdate': '2018-01-10',
-    'enddate': '2018-02-12',
-    'maxtweets' : 100,
-    'searchphrase' : 'lego building'
+    'username': 'SenSanders',
+    'startdate': '2016-10-10',
+    'enddate': '2016-12-12',
+    'maxtweets' : 5000,
+    'searchphrase' : 'Novo Nordisk',
+    'AVAPI' : '**************'
 }
