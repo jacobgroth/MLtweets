@@ -10,6 +10,6 @@ class plotStockData:
 
 
     def makeplot(self):
-        self.dataset['4. close'].plot()
+        self.dataset['Close'].plot()
         plt.title('Intraday Times Series for the MSFT stock (1 min)')
         plt.show()

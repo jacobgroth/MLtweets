@@ -1,15 +1,14 @@
-from alpha_vantage.timeseries import TimeSeries
+from pandas_datareader import data as pdr
 from runcontrol import controlparameters as cp
+import fix_yahoo_finance as yf
 
 class getStockData:
 
     def __init__(self):
-
-        self.ts = TimeSeries(key=cp['AVAPI'], output_format='pandas')
-
+        yf.pdr_override()
 
     def returnTimeSeries(self):
 
-        data, meta_data = self.ts.get_intraday(symbol='MSFT', interval='1min', outputsize='full')
+        data = pdr.get_data_yahoo("MSFT", start=cp["startdate"], end=cp["enddate"])
 
         return data

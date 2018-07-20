@@ -12,21 +12,15 @@ from plotStockData import *
 
 # ------- extract the tweets based on some criteria -------
 tweets = getTweets()
-selectedTweets = tweets.GetTheLastNTweetsByUsernameAndBoundDatesByQuerySearch()
-
+#selectedTweets = tweets.GetTheLastNTweetsByUsernameAndBoundDatesByQuerySearch()
+#print(selectedTweets)
 # ------- read in tweets from a file -------
-#selectedTweets = tweets.readTweetsFromExcelFile('output.xlsx')
+selectedTweets = tweets.readTweetsFromExcelFile('output.xlsx')
 
 
 # -------  if you want to write the tweets to a CSV file -------
 #writetweets = writeTweets(selectedTweets)
 #writetweets.writeTweetsToCSVFile()
-
-
-# -------  perform some analysis on the selected tweets -------
-#theAnalysis = analyzeTweets(selectedTweets)
-#theAnalysis.populateTimeSeries()
-#counts = theAnalysis.countNumberOfTweetsPerTime()
 
 # -------  machine learning stuff using NLTK tools -------
 
@@ -34,8 +28,18 @@ NLTKclass = NLTKTwitterToolsClass()
 NLTKclass.trainNaiveBayesClassifier()
 cat_tweets = NLTKclass.classifyTweets(selectedTweets)
 
-for tweet in cat_tweets:
-    print(tweet.text,tweet.sentiment)
+posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
+
+
+# -------  perform some analysis on the selected tweets -------
+theAnalysis_pos = analyzeTweets(posTweets)
+theAnalysis_pos.populateTimeSeries()
+counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
+
+theAnalysis_neg = analyzeTweets(negTweets)
+theAnalysis_neg.populateTimeSeries()
+counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
+
 
 
 # -------  looping over the selected tweets -------
@@ -45,23 +49,27 @@ for tweet in cat_tweets:
 #        print(tweet.text, tweet.date, tweet.retweets)
 
 
-# -------  create some illustrative plots of the selected selected tweets -------
-#plots = plotTweets(counts)
-#plots.makeplot()
-
-
 
 ##################### Stock data analysis #####################
 
 
 # ------- extract the stock data based on some criteria -------
-#stockdata = getStockData()
-#ts = stockdata.returnTimeSeries()
+stockdata = getStockData()
+ts = stockdata.returnTimeSeries()['Close']
+
+
 
 # -------  perform some analysis on the selected tweets -------
 
+
+
+##################### Plotti g for tweets and stockdata #####################
 
 # -------  create some illustrative plots of the selected selected stock data -------
 
 #plots = plotStockData(ts)
 #plots.makeplot()
+
+# -------  create some illustrative plots of the selected selected tweets -------
+plots = plotTweets( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos), ('Stock Rate : MSFT', ts) ]) )
+plots.makeplot()

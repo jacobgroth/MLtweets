@@ -123,11 +123,23 @@ class NLTKTwitterToolsClass:
         returntweets = []
         for tweet in tweets:
             custom_tweet_set = self.bag_of_words(tweet.text)
-            print(self.classifier.classify(custom_tweet_set))
             tweet.sentiment = self.classifier.classify(custom_tweet_set)
             returntweets.append(tweet)
 
         return returntweets
 
+    def splitIntoPosAndNeg(self,tweets):
+
+        posTweets = []
+        negTweets = []
+        for tweet in tweets:
+
+            if tweet.sentiment == 'pos':
+                posTweets.append(tweet)
+
+            else:
+                negTweets.append(tweet)
+
+        return posTweets, negTweets
 
 
