@@ -1,6 +1,7 @@
 from getTweets import *
 from writeTweets import *
 from analyzeTweets import *
+from NLTKTwitterTools import *
 from plotTweets import *
 from getStockData import *
 from analyzeStockData import *
@@ -10,8 +11,8 @@ from plotStockData import *
 ##################### Twitter analysis #####################
 
 # ------- extract the tweets based on some criteria -------
-#tweets = getTweets()
-#selectedTweets = tweets.GetTheLastNTweetsByUsernameAndBoundDatesByQuerySearch()
+tweets = getTweets()
+selectedTweets = tweets.GetTheLastNTweetsByUsernameAndBoundDatesByQuerySearch()
 
 # ------- read in tweets from a file -------
 #selectedTweets = tweets.readTweetsFromExcelFile('output.xlsx')
@@ -26,6 +27,15 @@ from plotStockData import *
 #theAnalysis = analyzeTweets(selectedTweets)
 #theAnalysis.populateTimeSeries()
 #counts = theAnalysis.countNumberOfTweetsPerTime()
+
+# -------  machine learning stuff using NLTK tools -------
+
+NLTKclass = NLTKTwitterToolsClass()
+NLTKclass.trainNaiveBayesClassifier()
+cat_tweets = NLTKclass.classifyTweets(selectedTweets)
+
+for tweet in cat_tweets:
+    print(tweet.text,tweet.sentiment)
 
 
 # -------  looping over the selected tweets -------
@@ -45,13 +55,13 @@ from plotStockData import *
 
 
 # ------- extract the stock data based on some criteria -------
-stockdata = getStockData()
-ts = stockdata.returnTimeSeries()
+#stockdata = getStockData()
+#ts = stockdata.returnTimeSeries()
 
 # -------  perform some analysis on the selected tweets -------
 
 
 # -------  create some illustrative plots of the selected selected stock data -------
 
-plots = plotStockData(ts)
-plots.makeplot()
+#plots = plotStockData(ts)
+#plots.makeplot()

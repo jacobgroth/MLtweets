@@ -3,7 +3,7 @@ controlparameters = {
     'username': 'SenSanders',
     'startdate': '2016-10-10',
     'enddate': '2016-12-12',
-    'maxtweets' : 5000,
+    'maxtweets' : 5,
     'searchphrase' : 'Novo Nordisk',
     'AVAPI' : '**************'
 }
