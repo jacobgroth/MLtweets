@@ -20,7 +20,6 @@ class plotTweets:
         for key, value in self.dataset.items():
             value.plot(style="o-",label=key)
 
-
         plt.legend()
 
         plt.show()

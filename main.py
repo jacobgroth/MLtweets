@@ -3,6 +3,7 @@ from writeTweets import *
 from analyzeTweets import *
 from NLTKTwitterTools import *
 from plotTweets import *
+from plotCombined import *
 from getStockData import *
 from analyzeStockData import *
 from plotStockData import *
@@ -49,6 +50,11 @@ counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
 #        print(tweet.text, tweet.date, tweet.retweets)
 
 
+# -------  perform some analysis on the selected tweets -------
+
+#plots = plotTweets( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos) ]) )
+#plots.makeplot()
+
 
 ##################### Stock data analysis #####################
 
@@ -57,9 +63,6 @@ counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
 stockdata = getStockData()
 ts = stockdata.returnTimeSeries()['Close']
 
-
-
-# -------  perform some analysis on the selected tweets -------
 
 
 
@@ -71,5 +74,6 @@ ts = stockdata.returnTimeSeries()['Close']
 #plots.makeplot()
 
 # -------  create some illustrative plots of the selected selected tweets -------
-plots = plotTweets( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos), ('Stock Rate : MSFT', ts) ]) )
+
+plots = plotCombined( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos), ('Stock Rate : MSFT', ts) ]) )
 plots.makeplot()
