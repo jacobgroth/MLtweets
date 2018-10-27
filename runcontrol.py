@@ -4,6 +4,6 @@ controlparameters = {
     'username': 'SenSanders',
     'startdate': '2016-10-10',
     'enddate': '2016-12-12',
-    'maxtweets' : 5,
-    'searchphrase' : 'Novo',
+    'maxtweets' : 100,
+    'searchphrase' : 'New',
 }

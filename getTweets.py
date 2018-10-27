@@ -12,7 +12,8 @@ class getTweets:
     def GetTweetsByUsername(self):
         tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setMaxTweets(cp['maxtweets'])
         tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)[0]
-        return tweets
+
+        return self.insertOriginalIndex(tweets)
 
 
     def GetTweetsByQuerySearch(self,text=None):
@@ -22,12 +23,14 @@ class getTweets:
 
         tweetCriteria = self.Got3Manager.TweetCriteria().setQuerySearch(text).setSince(cp['startdate']).setUntil(cp['enddate']).setMaxTweets(cp['maxtweets'])
         tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-        return tweets
+
+        return self.insertOriginalIndex(tweets)
 
     def GetTweetsByUsernameAndBoundDates(self):
         tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setSince(cp['startdate']).setUntil(cp['enddate']).setMaxTweets(cp['maxtweets'])
         tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-        return tweets
+
+        return self.insertOriginalIndex(tweets)
 
     def GetTheLastNTopTweetsByUsername(self,number=None):
 
@@ -36,7 +39,8 @@ class getTweets:
 
         tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setTopTweets(True).setMaxTweets(number)
         tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-        return tweets
+
+        return self.insertOriginalIndex(tweets)
 
     def GetTheLastNTopTweetsByUsernameAndBoundDates(self,number=None):
 
@@ -45,7 +49,8 @@ class getTweets:
 
         tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setSince(cp['startdate']).setUntil(cp['enddate']).setTopTweets(True).setMaxTweets(number)
         tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-        return tweets
+
+        return self.insertOriginalIndex(tweets)
 
     def GetTheLastNTweetsByUsernameAndBoundDates(self,number=None):
 
@@ -54,7 +59,8 @@ class getTweets:
 
         tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setSince(cp['startdate']).setUntil(cp['enddate']).setMaxTweets(number)
         tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-        return tweets
+
+        return self.insertOriginalIndex(tweets)
 
     def GetTheLastNTopTweetsByUsernameAndBoundDatesByQuerySearch(self,number=None,text=None):
 
@@ -66,7 +72,8 @@ class getTweets:
 
         tweetCriteria = self.Got3Manager.TweetCriteria().setQuerySearch(text).setUsername(cp['username']).setSince(cp['startdate']).setUntil(cp['enddate']).setTopTweets(True).setMaxTweets(number)
         tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-        return tweets
+
+        return self.insertOriginalIndex(tweets)
 
     def GetTheLastNTweetsByUsernameAndBoundDatesByQuerySearch(self,number=None,text=None):
 
@@ -78,7 +85,8 @@ class getTweets:
 
         tweetCriteria = self.Got3Manager.TweetCriteria().setQuerySearch(text).setSince(cp['startdate']).setUntil(cp['enddate']).setMaxTweets(number)
         tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-        return tweets
+
+        return self.insertOriginalIndex(tweets)
 
     def readTweetsFromExcelFile(self,excelfile):
 
@@ -103,7 +111,12 @@ class getTweets:
 
             tweets.append(tweet)
 
+        return self.insertOriginalIndex(tweets)
+
+    def insertOriginalIndex(self,tweets):
+
+        for i, tweet in  enumerate( tweets ):
+            tweet.index = i+1
+
         return tweets
-
-
 

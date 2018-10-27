@@ -16,7 +16,7 @@ class analyzeTweets:
         for tweet in self.tweets:
 
             dates.append(tweet.date)
-            retweets.append(tweet.retweets)
+            retweets.append(tweet.retweets+1)
 
         index = pd.DatetimeIndex(dates)
         data = pd.Series(retweets, index=index)
