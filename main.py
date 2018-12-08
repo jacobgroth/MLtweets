@@ -13,37 +13,36 @@ from plotStockData import *
 
 # ------- extract the tweets based on some criteria -------
 tweets = getTweets()
-selectedTweets = tweets.GetTweetsByUsernameAndBoundDates()
+selectedTweets = tweets.fillTweetList()
+
+
 #print(selectedTweets)
 # ------- read in tweets from a file -------
-#selectedTweets = tweets.readTweetsFromExcelFile('output.xlsx')
+#selectedTweets = tweets.readTweetsFromExcelFile('/Users/rgjg/Dropbox/nørdekode/andreas/MLtweets/twitterdata/tweets.csv')
 
 
-for tweet in selectedTweets:
+#for tweet in selectedTweets:
 
-    print(tweet.username, tweet.text)
+#    print(tweet.username, tweet.text, tweet.retweets )
 
-# -------  if you want to write the tweets to a CSV file -------
-#writetweets = writeTweets(selectedTweets)
-#writetweets.writeTweetsToCSVFile()
 
 # -------  machine learning stuff using NLTK tools -------
 
-#NLTKclass = NLTKTwitterToolsClass()
-#NLTKclass.trainNaiveBayesClassifier()
-#cat_tweets = NLTKclass.classifyTweets(selectedTweets)
+NLTKclass = NLTKTwitterToolsClass()
+NLTKclass.trainNaiveBayesClassifier()
+cat_tweets = NLTKclass.classifyTweets(selectedTweets)
 
-#posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
+posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
 
 
 # -------  perform some analysis on the selected tweets -------
-#theAnalysis_pos = analyzeTweets(posTweets)
-#theAnalysis_pos.populateTimeSeries()
-#counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
+theAnalysis_pos = analyzeTweets(posTweets)
+theAnalysis_pos.populateTimeSeries()
+counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
 
-#theAnalysis_neg = analyzeTweets(negTweets)
-#theAnalysis_neg.populateTimeSeries()
-#counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
+theAnalysis_neg = analyzeTweets(negTweets)
+theAnalysis_neg.populateTimeSeries()
+counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
 
 
 
@@ -56,8 +55,8 @@ for tweet in selectedTweets:
 
 # -------  perform some analysis on the selected tweets -------
 
-#plots = plotTweets( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos) ]) )
-#plots.makeplot()
+plots = plotTweets( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos) ]) )
+plots.makeplot()
 
 
 ##################### Stock data analysis #####################

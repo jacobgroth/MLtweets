@@ -1,117 +1,70 @@
 from runcontrol import controlparameters as cp
-import sys
+import sys,os
 import pandas as pd
+from tweet import tweet
+sys.path.insert(0, cp['pathToTwintModule'])
+import twint
+
 
 class getTweets:
 
     def __init__(self):
-        sys.path.insert(0, cp['pathToGetOldTweetsModule'])
-        import got3
-        self.Got3Manager = got3.manager
+        sys.path.insert(0, cp['pathToTwintModule'])
+        self.cwd = os.getcwd()
+        self.outputcsvfile =  self.cwd + "/" + cp['twitterOutputdata'] + "/tweets.csv"
 
-    def GetTweetsByUsername(self):
-        tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setMaxTweets(cp['maxtweets'])
-        tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)[0]
-
-        return self.insertOriginalIndex(tweets)
+        self.twintConfig = twint.Config()
 
 
-    def GetTweetsByQuerySearch(self,text=None):
 
-        if text==None:
-            text = cp['searchphrase']
-
-        tweetCriteria = self.Got3Manager.TweetCriteria().setQuerySearch(text).setSince(cp['startdate']).setUntil(cp['enddate']).setMaxTweets(cp['maxtweets'])
-        tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-
-        return self.insertOriginalIndex(tweets)
-
-    def GetTweetsByUsernameAndBoundDates(self):
-        tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setSince(cp['startdate']).setUntil(cp['enddate']).setMaxTweets(cp['maxtweets'])
-        tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-
-        return self.insertOriginalIndex(tweets)
-
-    def GetTheLastNTopTweetsByUsername(self,number=None):
-
-        if number==None:
-            number = cp['maxtweets']
-
-        tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setTopTweets(True).setMaxTweets(number)
-        tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-
-        return self.insertOriginalIndex(tweets)
-
-    def GetTheLastNTopTweetsByUsernameAndBoundDates(self,number=None):
-
-        if number==None:
-            number = cp['maxtweets']
-
-        tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setSince(cp['startdate']).setUntil(cp['enddate']).setTopTweets(True).setMaxTweets(number)
-        tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-
-        return self.insertOriginalIndex(tweets)
-
-    def GetTheLastNTweetsByUsernameAndBoundDates(self,number=None):
-
-        if number==None:
-            number = cp['maxtweets']
-
-        tweetCriteria = self.Got3Manager.TweetCriteria().setUsername(cp['username']).setSince(cp['startdate']).setUntil(cp['enddate']).setMaxTweets(number)
-        tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-
-        return self.insertOriginalIndex(tweets)
-
-    def GetTheLastNTopTweetsByUsernameAndBoundDatesByQuerySearch(self,number=None,text=None):
-
-        if number==None:
-            number = cp['maxtweets']
-
-        if text==None:
-            text = cp['searchphrase']
-
-        tweetCriteria = self.Got3Manager.TweetCriteria().setQuerySearch(text).setUsername(cp['username']).setSince(cp['startdate']).setUntil(cp['enddate']).setTopTweets(True).setMaxTweets(number)
-        tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-
-        return self.insertOriginalIndex(tweets)
-
-    def GetTheLastNTweetsByUsernameAndBoundDatesByQuerySearch(self,number=None,text=None):
-
-        if number==None:
-            number = cp['maxtweets']
-
-        if text==None:
-            text = cp['searchphrase']
-
-        tweetCriteria = self.Got3Manager.TweetCriteria().setQuerySearch(text).setSince(cp['startdate']).setUntil(cp['enddate']).setMaxTweets(number)
-        tweets = self.Got3Manager.TweetManager.getTweets(tweetCriteria)
-
-        return self.insertOriginalIndex(tweets)
-
-    def readTweetsFromExcelFile(self,excelfile):
-
-        from got3 import models
-        df = pd.read_excel(excelfile)
+    def fillTweetList(self):
 
         tweets = []
 
-        for index, row in df.iterrows():
-            tweet = models.Tweet()
+        if os.path.isfile(self.outputcsvfile):
+            print("removing old csv output file : " + self.outputcsvfile)
+            os.remove(self.outputcsvfile)
 
-            tweet.id = row['id']
-            tweet.permalink = '0'
-            tweet.username = row['username']
-            tweet.text = row['text']
-            tweet.date = index
-            tweet.retweets = row['retweets']
-            tweet.favorites  = row['favorites']
-            tweet.mentions = row['mentions']
-            tweet.hashtags  = row['hashtags']
-            tweet.geo  = '0'
 
-            tweets.append(tweet)
+        self.twintConfig.Username = cp['username']
+        self.twintConfig.Search = cp['searchphrase']
+        self.twintConfig.Store_csv = True
+        self.twintConfig.Limit = cp['maxtweets']
+        self.twintConfig.Since =  cp['startdate']
+        self.twintConfig.Until =  cp['enddate']
+        self.twintConfig.Custom["tweet"] = ["username","tweet","date", "retweets_count"]
+        self.twintConfig.Custom["user"] = ["bio"]
+        self.twintConfig.Output = cp['twitterOutputdata']
+
+        twint.run.Search(self.twintConfig)
+
+        df = pd.read_csv(self.outputcsvfile)
+
+        for (i, row) in df.iterrows():
+
+            tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] , retweets = row['retweets_count'])
+
+            tweets.append(tweetIn)
+
+        return tweets
+
+
+
+
+    def readTweetsFromExcelFile(self,excelfile):
+
+        tweets = []
+
+        df = pd.read_csv(self.outputcsvfile)
+
+        for (i, row) in df.iterrows():
+
+            tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] , retweets = row['retweets_count'])
+
+            tweets.append(tweetIn)
 
         return self.insertOriginalIndex(tweets)
+
 
     def insertOriginalIndex(self,tweets):
 
