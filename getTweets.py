@@ -26,7 +26,7 @@ class getTweets:
             os.remove(self.outputcsvfile)
 
 
-        self.twintConfig.Username = cp['username']
+        if len(cp['username']): self.twintConfig.Username = cp['username']
         self.twintConfig.Search = cp['searchphrase']
         self.twintConfig.Store_csv = True
         self.twintConfig.Limit = cp['maxtweets']
