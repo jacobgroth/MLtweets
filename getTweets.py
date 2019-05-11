@@ -52,9 +52,7 @@ class getTweets:
                 self.twintConfig.Output = cp['twitterOutputdata']
 
                 self.removeOldTwintCSVfile()
-
                 twint.run.Search(self.twintConfig)
-
                 frames.append( pd.read_csv(self.outputcsvfileTwint) )
 
             df = pd.concat(frames)
