@@ -1,5 +1,4 @@
 from getTweets import *
-from writeTweets import *
 from analyzeTweets import *
 from NLTKTwitterTools import *
 from plotTweets import *
@@ -28,23 +27,23 @@ selectedTweets = tweets.fillTweetList()
 
 # -------  machine learning stuff using NLTK tools -------
 
-NLTKclass = NLTKTwitterToolsClass()
-NLTKclass.trainNaiveBayesClassifier()
-cat_tweets = NLTKclass.classifyTweets(selectedTweets)
-
-posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
-
-
-# -------  perform some analysis on the selected tweets -------
-theAnalysis_pos = analyzeTweets(posTweets)
-theAnalysis_pos.populateTimeSeries()
-counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
-
-theAnalysis_neg = analyzeTweets(negTweets)
-theAnalysis_neg.populateTimeSeries()
-counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
-
-
+# NLTKclass = NLTKTwitterToolsClass()
+# NLTKclass.trainNaiveBayesClassifier()
+# cat_tweets = NLTKclass.classifyTweets(selectedTweets)
+#
+# posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
+#
+#
+# # -------  perform some analysis on the selected tweets -------
+# theAnalysis_pos = analyzeTweets(posTweets)
+# theAnalysis_pos.populateTimeSeries()
+# counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
+#
+# theAnalysis_neg = analyzeTweets(negTweets)
+# theAnalysis_neg.populateTimeSeries()
+# counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
+#
+#
 
 # -------  looping over the selected tweets -------
 #for tweet in selectedTweets:
@@ -55,16 +54,16 @@ counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
 
 # -------  perform some analysis on the selected tweets -------
 
-plots = plotTweets( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos) ]) )
-plots.makeplot()
+# plots = plotTweets( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos) ]) )
+# plots.makeplot()
 
 
 ##################### Stock data analysis #####################
 
 
 # ------- extract the stock data based on some criteria -------
-#stockdata = getStockData()
-#ts = stockdata.returnTimeSeries()['Close']
+# stockdata = getStockData()
+# ts = stockdata.returnTimeSeries()
 
 
 

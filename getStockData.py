@@ -9,6 +9,6 @@ class getStockData:
 
     def returnTimeSeries(self):
 
-        data = pdr.get_data_yahoo("MSFT", start=cp["startdate"], end=cp["enddate"])
+        data = pdr.get_data_yahoo(cp['stockindex'], start=cp["startdate"], end=cp["enddate"])
 
         return data
