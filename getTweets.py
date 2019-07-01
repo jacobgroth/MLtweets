@@ -33,18 +33,20 @@ class getTweets:
         if os.path.isfile(self.cp['outputCSVfile']):
             print("removing old csv output file for selected tweets : " + self.cp['outputCSVfile'])
             os.remove(self.cp['outputCSVfile'])
-            open(self.cp['outputCSVfile'], "w+").close()
+            open(self.cp['outputCSVfile'], "a").close()
         else:
             print("creating csv output file for selected tweets : " + self.cp['outputCSVfile'])
-            open(self.cp['outputCSVfile'], "w+").close()
+            open(self.cp['outputCSVfile'], "a").close()
 
         df = pd.DataFrame()
+        df_per_user = pd.DataFrame()
 
         if len(self.cp['username']):
 
             frames = []
             for i , username in enumerate( self.cp['username'] ):
 
+                frames_per_user = []
                 for searchphrase in self.cp['searchphrases']:
                     print("\n****** Getting tweets from legislator: {} with the search phrase: {} *******".format(username , searchphrase ))
                     self.twintConfig = twint.Config()
@@ -74,10 +76,24 @@ class getTweets:
                             dfram_temp.insert( len(dfram_temp.columns)  , cols, self.legislatorInfo[cols][i])
 
                         frames.append(dfram_temp)
+                        frames_per_user.append(dfram_temp)
 
-            df = pd.concat(frames)
-            df.sort_values(by=['date'], inplace=True, ascending=True)
-            if len(self.cp['outputCSVfile']): df.to_csv(self.cp['outputCSVfile'], index=False)
+                try:
+                    df_per_user = pd.concat(frames)
+                except ValueError:
+                    pass
+                else:
+
+                    df_per_user.sort_values(by=['date'], inplace=True, ascending=True)
+                    if len(self.cp['outputCSVfile']): df_per_user.to_csv(self.cp['outputCSVfile'], index=False)
+
+            try:
+                df = pd.concat(frames)
+            except ValueError:
+                pass
+            else:
+                df.sort_values(by=['date'], inplace=True, ascending=True)
+
 
         else:
 

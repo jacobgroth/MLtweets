@@ -16,7 +16,7 @@ from runcontrol import controlparameters as cp
 LC = getLegislatorInfoClass()
 legislatorInfo = LC.getInfo()
 
-cp['username'] = legislatorInfo['social__twitter'][0:1]
+cp['username'] = legislatorInfo['social__twitter']
 
 
 # ------- extract the tweets based on some criteria -------
