@@ -15,7 +15,7 @@ class plotTweets:
         ax1 = fig.add_subplot(1, 1, 1)
         ax1.set_xlabel('date')
         ax1.set_ylabel('number of tweets and stock rate')
-        ax1.set_title("number of time a tweet contains the phase: {} and MSFT stock rate".format(cp['searchphrase']))
+        ax1.set_title("number of time a tweet contains the phase: {} and MSFT stock rate".format(cp['searchphrases']))
 
         for key, value in self.dataset.items():
             value.plot(style="o-",label=key)

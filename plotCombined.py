@@ -32,7 +32,7 @@ class plotCombined:
         ax2.set_ylabel('Stock price  ($)', color='r')
         ax2.tick_params('y', colors='r')
         ax2.set_xlabel('Date')
-        ax2.set_title("Stock rates and number of time a tweet contains the phase: {} ".format(cp['searchphrase']))
+        ax2.set_title("Stock rates and number of time a tweet contains the phase: {} ".format(cp['searchphrases']))
 
         plt.legend()
 

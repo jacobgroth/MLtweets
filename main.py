@@ -6,12 +6,21 @@ from plotCombined import *
 from getStockData import *
 from analyzeStockData import *
 from plotStockData import *
-
+from getLegislatorInfo import *
+from runcontrol import controlparameters as cp
 
 ##################### Twitter analysis #####################
 
+# ------- extract the legislator infos as a pandas dataframe -------
+
+LC = getLegislatorInfoClass()
+legislatorInfo = LC.getInfo()
+
+cp['username'] = legislatorInfo['social__twitter'][0:1]
+
+
 # ------- extract the tweets based on some criteria -------
-tweets = getTweets()
+tweets = getTweets(cp,legislatorInfo)
 selectedTweets = tweets.fillTweetList()
 
 

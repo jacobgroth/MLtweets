@@ -8,10 +8,14 @@ import twint
 
 class getTweets:
 
-    def __init__(self):
-        sys.path.insert(0, cp['pathToTwintModule'])
+    def __init__(self,cp,legislatorInfo):
+
+        self.cp = cp
+        self.legislatorInfo = legislatorInfo
+        sys.path.insert(0, self.cp['pathToTwintModule'])
         self.cwd = os.getcwd()
-        self.outputcsvfileTwint =  self.cwd + "/" + cp['twitterOutputdata'] + "/tweets.csv"
+        self.outputcsvfileTwint =  self.cwd + "/" + self.cp['twitterOutputdata'] + "/tweets.csv"
+
 
 
     def removeOldTwintCSVfile(self):
@@ -26,58 +30,65 @@ class getTweets:
 
         tweets = []
 
-        if os.path.isfile(cp['outputCSVfile']):
-            print("removing old csv output file for selected tweets : " + cp['outputCSVfile'])
-            os.remove(cp['outputCSVfile'])
-            open(cp['outputCSVfile'], "w+").close()
+        if os.path.isfile(self.cp['outputCSVfile']):
+            print("removing old csv output file for selected tweets : " + self.cp['outputCSVfile'])
+            os.remove(self.cp['outputCSVfile'])
+            open(self.cp['outputCSVfile'], "w+").close()
         else:
-            print("creating csv output file for selected tweets : " + cp['outputCSVfile'])
-            open(cp['outputCSVfile'], "w+").close()
+            print("creating csv output file for selected tweets : " + self.cp['outputCSVfile'])
+            open(self.cp['outputCSVfile'], "w+").close()
 
         df = pd.DataFrame()
 
-        if len(cp['username']):
+        if len(self.cp['username']):
 
             frames = []
-            for username in cp['username']:
-                self.twintConfig = twint.Config()
-                self.twintConfig.Username = username
-                self.twintConfig.Search = cp['searchphrase']
-                self.twintConfig.Store_csv = True
-                self.twintConfig.Limit = cp['maxtweets']
-                self.twintConfig.Since = cp['startdate']
-                self.twintConfig.Until = cp['enddate']
-                self.twintConfig.Custom["tweet"] = ["username", "tweet", "date", "retweets_count"]
-                self.twintConfig.Custom["user"] = ["bio"]
-                self.twintConfig.Output = cp['twitterOutputdata']
+            for i , username in enumerate( self.cp['username'] ):
 
-                self.removeOldTwintCSVfile()
-                twint.run.Search(self.twintConfig)
-                frames.append( pd.read_csv(self.outputcsvfileTwint) )
+                for searchphrase in self.cp['searchphrases']:
+                    print("\n****** Getting tweets from legislator: {} with the search phrase: {} *******".format(username , searchphrase ))
+                    self.twintConfig = twint.Config()
+                    self.twintConfig.Username = username
+                    self.twintConfig.Search = searchphrase
+                    self.twintConfig.Store_csv = True
+                    self.twintConfig.Limit = self.cp['maxtweets']
+                    self.twintConfig.Since = self.cp['startdate']
+                    self.twintConfig.Until = self.cp['enddate']
+                    self.twintConfig.Custom["tweet"] = ["username", "tweet", "date", "retweets_count"]
+                    self.twintConfig.Custom["user"] = ["bio"]
+                    self.twintConfig.Output = self.cp['twitterOutputdata']
+
+                    self.removeOldTwintCSVfile()
+                    twint.run.Search(self.twintConfig)
+
+                    try:
+                        dfram_temp = pd.read_csv( self.outputcsvfileTwint )
+
+                    except FileNotFoundError:
+                        print( "\n Info : -------------- No tweets have been found for the legislator {} in the periode "
+                               "from {} to {}. Please modify your search critiria --------------- \n".format(username, self.cp['startdate'], self.cp['enddate'] ) )
+
+                    else:
+
+                        for cols in self.legislatorInfo.columns:
+                            dfram_temp.insert( len(dfram_temp.columns)  , cols, self.legislatorInfo[cols][i])
+
+                        frames.append(dfram_temp)
 
             df = pd.concat(frames)
             df.sort_values(by=['date'], inplace=True, ascending=True)
-            if len(cp['outputCSVfile']): df.to_csv(cp['outputCSVfile'], index=False)
-            print(df)
+            if len(self.cp['outputCSVfile']): df.to_csv(self.cp['outputCSVfile'], index=False)
 
         else:
-            self.twintConfig = twint.Config()
-            self.twintConfig.Search = cp['searchphrase']
-            self.twintConfig.Store_csv = True
-            self.twintConfig.Limit = cp['maxtweets']
-            self.twintConfig.Since = cp['startdate']
-            self.twintConfig.Until = cp['enddate']
-            self.twintConfig.Custom["tweet"] = ["username", "tweet", "date", "retweets_count"]
-            self.twintConfig.Custom["user"] = ["bio"]
-            self.twintConfig.Output = cp['twitterOutputdata']
 
-            self.removeOldTwintCSVfile()
-            twint.run.Search(self.twintConfig)
-            df = pd.read_csv(self.outputcsvfileTwint)
+            print(' Error: ----------- please provide a  list of twitter usernames ---------')
+            exit(1)
+
+
 
         for (i, row) in df.iterrows():
 
-            tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] , retweets = row['retweets_count'])
+            tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] , retweets = row['retweets_count'], bioguide = row['id__bioguide'] , legtype =  row['type'] )
 
             tweets.append(tweetIn)
 
