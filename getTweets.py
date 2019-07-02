@@ -104,10 +104,11 @@ class getTweets:
 
         for (i, row) in df.iterrows():
 
-            tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] , retweets = row['retweets_count'], bioguide = row['id__bioguide'] , legtype =  row['type'] )
+            tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] ,
+                             retweets = row['retweets_count'], bioguide = row['id__bioguide'] ,
+                             legtype =  row['type'], state =  row['state']  )
 
             tweets.append(tweetIn)
-
 
 
         return tweets
@@ -119,11 +120,15 @@ class getTweets:
 
         tweets = []
 
-        df = pd.read_csv(self.outputcsvfileTwint)
+        df = pd.read_csv(excelfile)
+
+        print(df.columns)
 
         for (i, row) in df.iterrows():
 
-            tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] , retweets = row['retweets_count'])
+            tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] ,
+                             retweets = row['retweets_count'], bioguide = row['id__bioguide'] ,
+                             legtype =  row['type'], state =  row['state']  )
 
             tweets.append(tweetIn)
 

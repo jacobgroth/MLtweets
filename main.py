@@ -16,25 +16,23 @@ from runcontrol import controlparameters as cp
 LC = getLegislatorInfoClass()
 legislatorInfo = LC.getInfo()
 
-cp['username'] = legislatorInfo['social__twitter']
+cp['username'] = legislatorInfo['social__twitter'][0:3]
 
 
 # ------- extract the tweets based on some criteria -------
 tweets = getTweets(cp,legislatorInfo)
-selectedTweets = tweets.fillTweetList()
+#selectedTweets = tweets.fillTweetList()
 
 
-#print(selectedTweets)
 # ------- read in tweets from a file -------
-#selectedTweets = tweets.readTweetsFromExcelFile('/Users/rgjg/Dropbox/nørdekode/andreas/MLtweets/twitterdata/tweets.csv')
+selectedTweets = tweets.readTweetsFromExcelFile('/Users/rgjg/Dropbox/geekcode/andreas/MLtweets/selectedtweets.csv')
+
+for tweet in selectedTweets:
+
+    print(tweet.username, tweet.text, tweet.retweets )
 
 
-#for tweet in selectedTweets:
-
-#    print(tweet.username, tweet.text, tweet.retweets )
-
-
-# -------  machine learning stuff using NLTK tools -------
+## -------  machine learning stuff using NLTK tools -------
 
 # NLTKclass = NLTKTwitterToolsClass()
 # NLTKclass.trainNaiveBayesClassifier()
