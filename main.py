@@ -11,12 +11,14 @@ from runcontrol import controlparameters as cp
 
 ##################### Twitter analysis #####################
 
+
+
 # ------- extract the legislator infos as a pandas dataframe -------
 
 LC = getLegislatorInfoClass()
 legislatorInfo = LC.getInfo()
 
-cp['username'] = legislatorInfo['social__twitter'][0:3]
+cp['username'] = legislatorInfo['social__twitter']
 
 
 # ------- extract the tweets based on some criteria -------
@@ -24,33 +26,33 @@ tweets = getTweets(cp,legislatorInfo)
 #selectedTweets = tweets.fillTweetList()
 
 
-# ------- read in tweets from a file -------
-selectedTweets = tweets.readTweetsFromExcelFile('/Users/rgjg/Dropbox/geekcode/andreas/MLtweets/selectedtweets.csv')
+#------- read in tweets from a file -------
+selectedTweets = tweets.readTweetsFromExcelFile('/home/jacob/Dropbox/geekcode/andreas/MLtweets-results-and-whatnot/selectedtweets1_wallstreet_economics_economic_recession.csv')
 
-for tweet in selectedTweets:
-
-    print(tweet.username, tweet.text, tweet.retweets )
+# for tweet in selectedTweets:
+#
+#     print(tweet.username, tweet.text, tweet.retweets )
 
 
 ## -------  machine learning stuff using NLTK tools -------
 
-# NLTKclass = NLTKTwitterToolsClass()
-# NLTKclass.trainNaiveBayesClassifier()
-# cat_tweets = NLTKclass.classifyTweets(selectedTweets)
-#
-# posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
-#
-#
-# # -------  perform some analysis on the selected tweets -------
-# theAnalysis_pos = analyzeTweets(posTweets)
-# theAnalysis_pos.populateTimeSeries()
-# counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
-#
-# theAnalysis_neg = analyzeTweets(negTweets)
-# theAnalysis_neg.populateTimeSeries()
-# counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
-#
-#
+NLTKclass = NLTKTwitterToolsClass()
+NLTKclass.trainNaiveBayesClassifier()
+cat_tweets = NLTKclass.classifyTweets(selectedTweets)
+
+posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
+
+
+# -------  perform some analysis on the selected tweets -------
+theAnalysis_pos = analyzeTweets(posTweets)
+theAnalysis_pos.populateTimeSeries()
+counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
+
+theAnalysis_neg = analyzeTweets(negTweets)
+theAnalysis_neg.populateTimeSeries()
+counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
+
+
 
 # -------  looping over the selected tweets -------
 #for tweet in selectedTweets:
@@ -65,7 +67,7 @@ for tweet in selectedTweets:
 # plots.makeplot()
 
 
-##################### Stock data analysis #####################
+##################### Stock data analysis from Yahoo finance #####################
 
 
 # ------- extract the stock data based on some criteria -------
@@ -73,16 +75,20 @@ for tweet in selectedTweets:
 # ts = stockdata.returnTimeSeries()
 
 
+#################### get EPS and cashflow data  #################################
 
+
+FMP = FMPClass()
+FMPdata = FMP.getFMPdata( FQ = 'EPS')
 
 ##################### Plotti g for tweets and stockdata #####################
 
 # -------  create some illustrative plots of the selected selected stock data -------
 
-#plots = plotStockData(ts)
-#plots.makeplot()
+# plots = plotStockData(FMPdata, 'FMT' )
+# plots.makeplot()
 
 # -------  create some illustrative plots of the selected selected tweets -------
 
-#plots = plotCombined( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos), ('Stock Rate : MSFT', ts) ]) )
-#plots.makeplot()
+plots = plotCombined( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos), ('FMPdata', FMPdata) ]) )
+plots.makeplot()

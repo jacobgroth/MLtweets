@@ -48,7 +48,7 @@ class getTweets:
 
                 frames_per_user = []
                 for searchphrase in self.cp['searchphrases']:
-                    print("\n****** Getting tweets from legislator: {} with the search phrase: {} *******".format(username , searchphrase ))
+                    print("\n****** Getting tweets from legislator: {} (number {}) with the search phrase: {} *******".format(username , i , searchphrase ))
                     self.twintConfig = twint.Config()
                     self.twintConfig.Username = username
                     self.twintConfig.Search = searchphrase

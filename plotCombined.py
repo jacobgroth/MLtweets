@@ -28,11 +28,11 @@ class plotCombined:
 
         ax2 = ax1.twinx()
 
-        self.dataset['Stock Rate : MSFT'].plot(style="ro-", label='MSFT')
-        ax2.set_ylabel('Stock price  ($)', color='r')
+        self.dataset['FMPdata'].plot(style="ro-", label='EPS')
+        ax2.set_ylabel('EPS ($)', color='r')
         ax2.tick_params('y', colors='r')
         ax2.set_xlabel('Date')
-        ax2.set_title("Stock rates and number of time a tweet contains the phase: {} ".format(cp['searchphrases']))
+        ax2.set_title("Earnings per share and number of time a tweet contains the phase: {} ".format(cp['searchphrases']))
 
         plt.legend()
 
