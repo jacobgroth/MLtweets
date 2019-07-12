@@ -18,7 +18,7 @@ controlparameters = {
     'maxtweets' : 100000000 ,
     #'searchphrases' : ['USA', 'fans'], # for more than one search phrase -> seperate by space
     'searchphrases' : ['Wall Street', 'economics', 'recession' ], # for more than one search phrase -> seperate by space
-    'twitterOutputdata': 'twitterdata',
+    'twitterOutputdata':  'twitterdata',
     'stockindex' : "^GSPC",  # s&p500 use  "^IXIC" for nasdaq
     'stockvaluetime' : 'Close', # Use for instance "Open" for opening stock value
     'companySector': ['Information Technology', 'Industrials']
