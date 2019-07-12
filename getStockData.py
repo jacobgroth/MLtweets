@@ -128,7 +128,7 @@ class FMPClass:
 
         comInfo = pd.read_csv( cp['companyInfoDir'] + cp['SandP500file'] , sep=';')
 
-        return [str(short) for short in comInfo['ticker']][:200]
+        return [str(short) for short in comInfo['ticker']]
 
 
     def readFMPdataFromCSVfile(self , FQ = 'ESP' , filter = True , avg = True ):
