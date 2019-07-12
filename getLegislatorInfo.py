@@ -23,6 +23,6 @@ class getLegislatorInfoClass:
         filtered_merged_historical = merged_outer_historical[merged_outer_historical['social__twitter'].notnull()]
         filtered_merged_outer = merged_outer[merged_outer['social__twitter'].notnull()]
 
-        final_df = filtered_merged_outer.filter(['id__bioguide','social__twitter','type', 'state'])
+        final_df = filtered_merged_outer.filter(['id__bioguide','social__twitter','type', 'state','party'])
 
         return final_df

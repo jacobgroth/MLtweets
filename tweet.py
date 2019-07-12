@@ -10,10 +10,11 @@ class tweet:
         self.bioguide = ''
         self.type = ''
         self.state = ''
+        self.party = ''
 
 
 
-    def __init__(self, username = '' , text = '', date = '', retweets = 0, bioguide = '', legtype = '', state = '' ):
+    def __init__(self, username = '' , text = '', date = '', retweets = 0, bioguide = '', legtype = '', state = '', party = '' ):
 
         self.username = username
         self.text = text
@@ -22,3 +23,4 @@ class tweet:
         self.bioguide = bioguide
         self.legtype = legtype
         self.state = state
+        self.party = party

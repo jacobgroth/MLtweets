@@ -15,19 +15,19 @@ from runcontrol import controlparameters as cp
 
 # ------- extract the legislator infos as a pandas dataframe -------
 
-LC = getLegislatorInfoClass()
-legislatorInfo = LC.getInfo()
-
-cp['username'] = legislatorInfo['social__twitter']
-
-
-# ------- extract the tweets based on some criteria -------
-tweets = getTweets(cp,legislatorInfo)
-#selectedTweets = tweets.fillTweetList()
-
-
-#------- read in tweets from a file -------
-selectedTweets = tweets.readTweetsFromExcelFile('/home/jacob/Dropbox/geekcode/andreas/MLtweets-results-and-whatnot/selectedtweets1_wallstreet_economics_economic_recession.csv')
+# LC = getLegislatorInfoClass()
+# legislatorInfo = LC.getInfo()
+#
+# cp['username'] = legislatorInfo['social__twitter']
+#
+#
+# # ------- extract the tweets based on some criteria -------
+# tweets = getTweets(cp,legislatorInfo)
+# #selectedTweets = tweets.fillTweetList()
+#
+#
+# #------- read in tweets from a file -------
+# selectedTweets = tweets.readTweetsFromExcelFile('/home/jacob/Dropbox/geekcode/andreas/MLtweets-results-and-whatnot/selectedtweets1_wallstreet_economics_economic_recession.csv')
 
 # for tweet in selectedTweets:
 #
@@ -36,22 +36,22 @@ selectedTweets = tweets.readTweetsFromExcelFile('/home/jacob/Dropbox/geekcode/an
 
 ## -------  machine learning stuff using NLTK tools -------
 
-NLTKclass = NLTKTwitterToolsClass()
-NLTKclass.trainNaiveBayesClassifier()
-cat_tweets = NLTKclass.classifyTweets(selectedTweets)
-
-posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
-
-
-# -------  perform some analysis on the selected tweets -------
-theAnalysis_pos = analyzeTweets(posTweets)
-theAnalysis_pos.populateTimeSeries()
-counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
-
-theAnalysis_neg = analyzeTweets(negTweets)
-theAnalysis_neg.populateTimeSeries()
-counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
-
+# NLTKclass = NLTKTwitterToolsClass()
+# NLTKclass.trainNaiveBayesClassifier()
+# cat_tweets = NLTKclass.classifyTweets(selectedTweets)
+#
+# posTweets, negTweets = NLTKclass.splitIntoPosAndNeg(cat_tweets)
+#
+#
+# # -------  perform some analysis on the selected tweets -------
+# theAnalysis_pos = analyzeTweets(posTweets)
+# theAnalysis_pos.populateTimeSeries()
+# counts_pos = theAnalysis_pos.countNumberOfTweetsPerTime()
+#
+# theAnalysis_neg = analyzeTweets(negTweets)
+# theAnalysis_neg.populateTimeSeries()
+# counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
+#
 
 
 # -------  looping over the selected tweets -------
@@ -79,7 +79,11 @@ counts_neg = theAnalysis_neg.countNumberOfTweetsPerTime()
 
 
 FMP = FMPClass()
-FMPdata = FMP.getFMPdata( FQ = 'EPS')
+#FMPdata = FMP.getFMPdata( FQ = 'Free Cash Flow')
+#print(FMPdata)
+
+FMPdata = FMP.readFMPdataFromCSVfile( FQ = 'EPS')
+print(FMPdata)
 
 ##################### Plotti g for tweets and stockdata #####################
 
@@ -90,5 +94,5 @@ FMPdata = FMP.getFMPdata( FQ = 'EPS')
 
 # -------  create some illustrative plots of the selected selected tweets -------
 
-plots = plotCombined( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos), ('FMPdata', FMPdata) ]) )
-plots.makeplot()
+# plots = plotCombined( dict([('negative tweets', counts_neg), ('positive tweets', counts_pos), ('FMPdata', FMPdata) ]) )
+# plots.makeplot()

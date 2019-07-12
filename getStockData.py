@@ -3,6 +3,7 @@ from runcontrol import controlparameters as cp
 import fix_yahoo_finance as yf
 import json
 import pandas as pd
+import time
 
 try:
     # For Python 3.0 and later
@@ -33,7 +34,7 @@ class FMPClass:
         self.datatype = ''
         #self.datatype = '?datatype=json'
 
-        self.listOfCompShort = self.populateListOfCompanyUrls(top = 25)
+        self.listOfCompShort = self.populateListOfCompanyUrls()
 
     def retriveRawFMPdata(self, url):
         """
@@ -47,6 +48,8 @@ class FMPClass:
         -------
         dict
         """
+
+        time.sleep(1)
         response = urlopen(url)
         data = response.read().decode("utf-8")
         return json.loads(data)
@@ -58,6 +61,7 @@ class FMPClass:
 
         if FQ == 'EPS':
             FQkeyWord = 'income-statement'
+        #elif FQ == 'Free Cash Flow':
         elif FQ == 'Free Cash Flow':
             FQkeyWord = 'cash-flow-statement'
 
@@ -72,35 +76,84 @@ class FMPClass:
             compdataDict = self.retriveRawFMPdata(url)
             FQdata = []
 
-            for FS in compdataDict['financials']:
-                if FS['date'] < cp['startdate'] or FS['date'] > cp['enddate'] : continue
-                FQdata.append( float(FS[FQ]) )
-                if i == 0: index.append(FS['date'])
+            try:
+                compdataDict['financials']
+            except:
+                print( "THere is no financial information about company {} - skipping this company".format(comp) )
+                pass
+            else:
+                for FS in compdataDict['financials']:
+                    if FS['date'] < cp['startdate'] or FS['date'] > cp['enddate'] : continue
+                    try:
+                        float(FS[FQ])
+                    except ValueError:
+                        print(" ValueError while extracting financial data. Inserting 0. Place take that into account ")
+                        FQdata.append(0.0)
+                    else:
+                        FQdata.append( float(FS[FQ]) )
+                    if i == 0: index.append(FS['date'])
 
+            if len(FQdata) != len(index): continue
             dataFrameDict[ comp ] = FQdata
             index = pd.DatetimeIndex(index)
 
         return pd.DataFrame(data=dataFrameDict, index = index)
 
 
+    def getFMPdata(self, FQ = 'ESP', avg = True  ):
 
-
-    def getFMPdata(self, FQ = 'ESP', avg = True):
-
+        """
+        Det the FMP data and populates a pandas time series with the average value of the information .
+        Also writes the non-averaged information to a CSV file
+        :param FQ:
+        :param avg:
+        :return:
+        """
 
         timeSeriesData = self.formatFMPdata(FQ = FQ)
         print(timeSeriesData)
 
+        outputCVSfilename = cp['companyInfoDir'] + FQ.replace(" ", "") + '_' +  cp['FMPdataoutputfileCSV']
+
+        open( outputCVSfilename  , "w+").close()
+        timeSeriesData.to_csv( outputCVSfilename )
+
         if avg == True:
             timeSeriesData = timeSeriesData.mean(axis = 1)
-            timeSeriesData = pd. Series( timeSeriesData )
+            timeSeriesData = pd.Series( timeSeriesData )
 
         return timeSeriesData
 
-    def populateListOfCompanyUrls(self, top = 100):
+    def populateListOfCompanyUrls(self):
 
-        comInfo = pd.read_csv( cp['companyInfoDir'] + "SP100_list.csv" )
+        comInfo = pd.read_csv( cp['companyInfoDir'] + cp['SandP500file'] , sep=';')
 
-        return [str(short) for short in comInfo['ticker']][:top]
+        return [str(short) for short in comInfo['ticker']][:200]
 
+
+    def readFMPdataFromCSVfile(self , FQ = 'ESP' , filter = True , avg = True ):
+
+        FMPdata = pd.read_csv( cp['companyInfoDir'] + FQ.replace(" ", "") + '_' +  cp['FMPdataoutputfileCSV']  )
+
+        if filter == False : return FMPdata
+
+        comInfo_DataFrame = pd.read_csv(cp['companyInfoDir'] + cp['SandP500file'], sep=';')
+
+        index =  pd.DatetimeIndex( FMPdata['Unnamed: 0'] )
+        FMPdata.index = index
+        FMPdata.drop(columns='Unnamed: 0')
+
+        comInfo_DataFrame.loc[comInfo_DataFrame['ticker'] == 'foo']
+
+        for comp in FMPdata.columns:
+            if comp == 'Unnamed: 0':continue
+
+            sector = str( comInfo_DataFrame.loc[ comInfo_DataFrame['ticker'] == comp , 'GICS_sector' ].iat[0] )
+
+            if sector not in cp['companySector']: FMPdata.pop( comp )
+
+        FMPdata.pop('Unnamed: 0')
+        FMPdata.index.name = 'date'
+        if avg == True: FMPdata = FMPdata.mean(axis=1)
+        return FMPdata
 

@@ -4,6 +4,8 @@ controlparameters = {
     'outputCSVfile': '/home/jacob//Dropbox/geekcode/andreas/MLtweets/selectedtweets.csv',
     'legislatorsInfoDir': "/home/jacob/Dropbox/geekcode/andreas/congress-legislators/CSVfiles/",
     'companyInfoDir': "/home/jacob/Dropbox/geekcode/andreas/FMPdata/",
+    'SandP500file': "SP500_list.csv",
+    'FMPdataoutputfileCSV': 'FMPdataCSV.csv',
 
 
     # 'outputCSVfile': '/Users/rgjg/Dropbox/geekcode/andreas/MLtweets/selectedtweets.csv',
@@ -18,6 +20,7 @@ controlparameters = {
     'searchphrases' : ['Wall Street', 'economics', 'recession' ], # for more than one search phrase -> seperate by space
     'twitterOutputdata': 'twitterdata',
     'stockindex' : "^GSPC",  # s&p500 use  "^IXIC" for nasdaq
-    'stockvaluetime' : 'Close' # Use for instance "Open" for opening stock value
+    'stockvaluetime' : 'Close', # Use for instance "Open" for opening stock value
+    'companySector': ['Information Technology', 'Industrials']
 
 }

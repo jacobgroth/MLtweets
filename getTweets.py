@@ -106,7 +106,7 @@ class getTweets:
 
             tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] ,
                              retweets = row['retweets_count'], bioguide = row['id__bioguide'] ,
-                             legtype =  row['type'], state =  row['state']  )
+                             legtype =  row['type'], state =  row['state'], party = row['party']  )
 
             tweets.append(tweetIn)
 
@@ -128,7 +128,7 @@ class getTweets:
 
             tweetIn = tweet( username = row['username'], text = row['tweet'], date = row['date'] ,
                              retweets = row['retweets_count'], bioguide = row['id__bioguide'] ,
-                             legtype =  row['type'], state =  row['state']  )
+                             legtype =  row['type'], state =  row['state'], party = row['party']  )
 
             tweets.append(tweetIn)
 
