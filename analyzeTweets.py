@@ -30,7 +30,7 @@ class analyzeTweets:
     def countNumberOfTweetsPerTime(self,time='H'):
 
         #counts = self.data.groupby([self.data.index.year,self.data.index.month,self.data.index.day,self.data.index.hour]).count()
-        counts = self.data.resample('D').count()
+        counts = self.data.resample(time).count()
 
 
         return counts

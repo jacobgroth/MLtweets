@@ -28,11 +28,11 @@ class plotCombined:
 
         ax2 = ax1.twinx()
 
-        self.dataset['FMPdata'].plot(style="ro-", label='EPS')
-        ax2.set_ylabel('EPS ($)', color='r')
+        self.dataset['FMPdata'].plot(style="ro-", label='Free Cash Flow')
+        ax2.set_ylabel('Free Cash Flow ($)', color='r')
         ax2.tick_params('y', colors='r')
         ax2.set_xlabel('Date')
-        ax2.set_title("Earnings per share and number of time a tweet contains the phase: {} ".format(cp['searchphrases']))
+        ax2.set_title("Free Cash flow and number of time a tweet contains the phase: {} ".format(cp['searchphrases']))
 
         plt.legend()
 

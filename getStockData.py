@@ -143,8 +143,6 @@ class FMPClass:
         FMPdata.index = index
         FMPdata.drop(columns='Unnamed: 0')
 
-        comInfo_DataFrame.loc[comInfo_DataFrame['ticker'] == 'foo']
-
         for comp in FMPdata.columns:
             if comp == 'Unnamed: 0':continue
 
